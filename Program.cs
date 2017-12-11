@@ -19,9 +19,17 @@ namespace LogConvert {
                 newFile = new StreamWriter (path);
 
             } else {
-                DirectoryInfo dir = Directory.CreateDirectory (Path.GetDirectoryName (path));
+                var dirname = Path.GetDirectoryName (path);
+                if (!string.IsNullOrWhiteSpace (dirname)) {
+                    DirectoryInfo dir = Directory.CreateDirectory (dirname);
+                }
                 newFile = new StreamWriter (path);
             }
+
+            //File header
+            newFile.WriteLine ("#Version: 1.0");
+            newFile.WriteLine (string.Format ("#Data: {0}", DateTime.Now));
+            newFile.WriteLine ("#Fields: provider http-method status-code uri-path time-taken response-size cache-status");
 
             string line;
             while ((line = reader.ReadLine ()) != null) {
